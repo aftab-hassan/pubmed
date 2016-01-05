@@ -12,7 +12,7 @@ options(warn=-1)
 
 df = read.table("9121medications.txt")
 medications  = as.character(df$V2)
-allprefix = c('(heart+failure)','(readmission)','(chf)','(length+of+stay)','(mortality)', '(one+year+mortality)','(twelve+month+mortality)','(seven+day+length+of+stay)')
+allprefix = c('(heart+failure)','(readmission)','(chf)','(length+of+stay)','(mortality)', '(one+year+mortality)','(twelve+month+mortality)','(seven+day+length+of+stay)','(thirty+day+readmission)','(30+day+readmission)')
 #allprefix = c('(heart+failure)','(readmission)','(chf)')
 #prefix = "http://www.ncbi.nlm.nih.gov/pubmed/?term=(heart+failure)+AND+"
 
@@ -25,6 +25,8 @@ mortalitycountarray = c()
 oneyearmortalitycountarray = c()
 twelvemonthmortalitycountarray = c()
 sevendaylengthofstaycountarray = c()
+thirtydayreadmissioncountarray = c()
+thirtyday30readmissioncountarray = c()
 
 #loop through all prefixes
 for(p in 1:length(allprefix))
@@ -106,6 +108,12 @@ for(p in 1:length(allprefix))
   '8'={
   sevendaylengthofstaycountarray = c(sevendaylengthofstaycountarray,count)
   },
+  '9'={
+  thirtydayreadmissioncountarray = c(thirtydayreadmissioncountarray,count)
+  },
+  '10'={
+  thirtyday30readmissioncountarray = c(thirtyday30readmissioncountarray,count)
+  },
   {
    print('default')
   }
@@ -116,7 +124,7 @@ for(p in 1:length(allprefix))
 
 save.image("MyImage.RData")
  
-df = data.frame(medicationsarray,heartfailurecountarray,readmissioncountarray,chfcountarray,lengthofstaycountarray,mortalitycountarray,oneyearmortalitycountarray,twelvemonthmortalitycountarray,sevendaylengthofstaycountarray)
+df = data.frame(medicationsarray,heartfailurecountarray,readmissioncountarray,chfcountarray,lengthofstaycountarray,mortalitycountarray,oneyearmortalitycountarray,twelvemonthmortalitycountarray,sevendaylengthofstaycountarray,thirtydayreadmissioncountarray,thirtyday30readmissioncountarray)
 #print(df)
 
 for(i in 2:ncol(df))
@@ -130,4 +138,6 @@ df$COMBINEDCOUNT = COMBINEDCOUNT
 
 df = arrange(df,desc(COMBINEDCOUNT))
 
+write.table(df, "olyNIH", sep="\t")
+write.csv(df,'output.csv',row.names=FALSE)
 saveRDS(df,'output.RDS')
